@@ -1,7 +1,0 @@
-this is text file
-
-second line command
-
-
-	user easttwave fork this txt file
-	made second commit
