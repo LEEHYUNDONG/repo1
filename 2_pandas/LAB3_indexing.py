@@ -132,3 +132,100 @@ category
 
 s = pd.Series(['여자', '남자', '아이'] * 10).to_frame()
 s.info(memory_usage='deep')
+
+print(df.sort_values(by='pclass', ascending=True))
+print(df.sort_values(by=['sibsp', 'parch'], ascending=[False, False]))
+
+
+#######################################################################################
+
+df = sns.load_dataset('titanic')
+
+
+print(df.loc[2, 'age'])
+
+print(df.loc[2 : 5, ['age', 'fare', 'who' ]])
+
+print(df.loc[2 : 5, 'class':'deck'])
+
+'''
+
+boolean array를 쓰는경우에는 iloc은 안쓰는게 좋다.
+
+'''
+
+condition = (df['who'] == 'man')
+condition2 = (df['age'] > 25)
+
+print(df.loc[condition & condition2, :])
+
+
+##############################
+
+df = sns.load_dataset('titanic')
+
+cond1 = (df['who'] == 'man')
+cond2 = (df['age'] >= 30)
+res = df.loc[cond1 & cond2, :].sort_values(by='fare', ascending=False).head(10)
+print(res)
+
+##############################
+
+df = sns.load_dataset('titanic')
+
+cond1 = ((df['pclass'] == 1) | (df['pclass'] == 2))
+cond2 = ((df['age'] >= 20) & (df['age'] < 40))
+res = df.loc[cond1 & cond2, ['survived', 'pclass', 'age', 'fare']].head(10)
+print(res)
+
+
+'''
+
+## iloc
+- `loc`와 유사하지만, integer index만 허용합니다.
+- loc와 마찬가지고, indexing / slicing 모두 가능합니다.
+
+
+
+'''
+
+
+'''
+
+## isin
+특정 값의 포함 여부는 isin 함수를 통해 비교가 가능합니다. 
+(파이썬의 in 키워드는 사용 불가 합니다.)
+
+
+'''
+
+sample = pd.DataFrame({'name': ['kim', 'lee', 'park', 'choi'], 
+                        'age': [24, 27, 34, 19]
+                      })
+print(sample)
+
+print(sample['name'].isin(['kim', 'lee']))
+
+condition = sample['name'].isin(['kim', 'lee'])
+print(sample.loc[condition])
+
+
+'''
+
+## where
+
+
+`DataFrame.where(cond, other=nan, inplace=False, axis=None, level=None, errors='raise', try_cast=False)`
+
+Pandas의 `where`는 Numpy의 `where`와 동작이 다릅니다.
+
+- cond: True/False로 판단될 수 있는 식
+- other: condition을 만족하지 못하는 요소에 할당 할 값
+
+'''
+
+print(df['fare'].where(df['fare']<20, 0))
+
+# [add]  df.query()
+
+print(df.query('age > 20 and age < 40 and pclass==3').head(10))
